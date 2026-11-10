@@ -1,0 +1,9 @@
+.env
+.cairn-address
+node_modules/
+__pycache__/
+.pytest_cache/
+artifacts/
+*.pyc
+reports/*
+!reports/.gitkeep
