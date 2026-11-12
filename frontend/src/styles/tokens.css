@@ -1,0 +1,106 @@
+/* Design tokens. Two themes: "light" (daylight paper) and "dim" (a softened dark, never pure black). */
+:root {
+  --font-display: "Bricolage Grotesque Variable", "Bricolage Grotesque", ui-rounded, "Avenir Next", system-ui, sans-serif;
+  --font-body: "Instrument Sans Variable", "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --header-h: 68px;
+  --maxw: 1200px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --spring: cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+
+:root,
+[data-theme="light"] {
+  --bg: #f6f4ee;
+  --bg-2: #eeeadf;
+  --surface: #ffffff;
+  --surface-2: #faf8f3;
+  --surface-glass: rgba(255, 255, 255, 0.74);
+  --ink: #151a33;
+  --ink-2: #474f70;
+  --ink-3: #78809b;
+  --line: rgba(21, 26, 51, 0.11);
+  --line-strong: rgba(21, 26, 51, 0.22);
+
+  --brand: #0a8a82;
+  --brand-strong: #077a73;
+  --brand-text: #077a73;
+  --brand-soft: rgba(10, 138, 130, 0.12);
+  --on-brand: #ffffff;
+  --btn-from: #0d9a91;
+  --btn-to: #077a73;
+  --violet: #5b4de0;
+  --violet-soft: rgba(91, 77, 224, 0.12);
+  --gold: #d58a05;
+  --gold-soft: rgba(226, 154, 12, 0.16);
+  --red: #cf3a53;
+  --red-soft: rgba(207, 58, 83, 0.11);
+  --green: #0f8f5a;
+  --green-soft: rgba(15, 143, 90, 0.12);
+
+  --stone-1: #6a5af0;
+  --stone-2: #17b8a8;
+  --stone-3: #f3b72b;
+  --stone-4: #d957e8;
+  --stone-5: #35c8bd;
+
+  --shadow-sm: 0 1px 2px rgba(21, 26, 51, 0.06), 0 4px 14px rgba(21, 26, 51, 0.05);
+  --shadow-md: 0 2px 6px rgba(21, 26, 51, 0.07), 0 14px 34px rgba(21, 26, 51, 0.1);
+  --shadow-lg: 0 8px 20px rgba(21, 26, 51, 0.09), 0 30px 70px rgba(21, 26, 51, 0.16);
+  --glow: 0 0 0 4px rgba(10, 138, 130, 0.18);
+  --blob-a: rgba(106, 90, 240, 0.2);
+  --blob-b: rgba(23, 184, 168, 0.22);
+  --blob-c: rgba(243, 183, 43, 0.2);
+  --grid-line: rgba(21, 26, 51, 0.045);
+  --code-bg: #f1eee6;
+  --code-ink: #26304f;
+  --grad: linear-gradient(110deg, #5b4de0 0%, #0a8a82 52%, #d58a05 105%);
+  --backdrop: rgba(21, 26, 51, 0.38);
+}
+
+[data-theme="dim"] {
+  --bg: #1b2038;
+  --bg-2: #161a30;
+  --surface: #252b4b;
+  --surface-2: #212844;
+  --surface-glass: rgba(37, 43, 75, 0.74);
+  --ink: #eaedf9;
+  --ink-2: #b6bcda;
+  --ink-3: #8a92b5;
+  --line: rgba(234, 237, 249, 0.12);
+  --line-strong: rgba(234, 237, 249, 0.24);
+
+  --brand: #38dccd;
+  --brand-strong: #22bfb1;
+  --brand-text: #4fe3d5;
+  --brand-soft: rgba(56, 220, 205, 0.14);
+  --on-brand: #052d2a;
+  --btn-from: #4fe6d8;
+  --btn-to: #22bfb1;
+  --violet: #9d8fff;
+  --violet-soft: rgba(157, 143, 255, 0.16);
+  --gold: #ffc23d;
+  --gold-soft: rgba(255, 194, 61, 0.16);
+  --red: #ff7389;
+  --red-soft: rgba(255, 115, 137, 0.15);
+  --green: #43d99c;
+  --green-soft: rgba(67, 217, 156, 0.15);
+
+  --shadow-sm: 0 1px 2px rgba(5, 8, 25, 0.35), 0 4px 14px rgba(5, 8, 25, 0.25);
+  --shadow-md: 0 2px 6px rgba(5, 8, 25, 0.4), 0 14px 34px rgba(5, 8, 25, 0.35);
+  --shadow-lg: 0 8px 20px rgba(5, 8, 25, 0.45), 0 30px 70px rgba(5, 8, 25, 0.5);
+  --glow: 0 0 0 4px rgba(56, 220, 205, 0.22);
+  --blob-a: rgba(157, 143, 255, 0.22);
+  --blob-b: rgba(56, 220, 205, 0.16);
+  --blob-c: rgba(255, 194, 61, 0.1);
+  --grid-line: rgba(234, 237, 249, 0.045);
+  --code-bg: #171c33;
+  --code-ink: #d7dcf3;
+  --grad: linear-gradient(110deg, #a99dff 0%, #4fe3d5 52%, #ffc23d 105%);
+  --backdrop: rgba(8, 10, 24, 0.6);
+}

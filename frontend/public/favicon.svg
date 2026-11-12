@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Cairn">
+  <defs>
+    <linearGradient id="gBase" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7d6cff"/>
+      <stop offset="1" stop-color="#3a2cb4"/>
+    </linearGradient>
+    <linearGradient id="gMid" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2fe0cd"/>
+      <stop offset="1" stop-color="#0a8683"/>
+    </linearGradient>
+    <linearGradient id="gTop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd25a"/>
+      <stop offset="1" stop-color="#ec9410"/>
+    </linearGradient>
+    <radialGradient id="gSpark" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#e9fffc"/>
+      <stop offset="0.45" stop-color="#4bf4e4"/>
+      <stop offset="1" stop-color="#4bf4e4" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- ground shadow -->
+  <ellipse cx="60" cy="112" rx="40" ry="5" fill="#000" opacity=".16"/>
+  <!-- base stone -->
+  <path d="M14 95C14 80 34 73 60 73c27 0 46 8 46 22 0 12-19 19-46 19S14 108 14 95Z" fill="url(#gBase)"/>
+  <path d="M24 88c8-7 22-10 36-10" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="3.2" stroke-linecap="round"/>
+  <!-- shadow cast by the middle stone -->
+  <ellipse cx="62" cy="80" rx="29" ry="5" fill="#0b0640" opacity=".28"/>
+  <!-- middle stone -->
+  <path d="M30 66c0-12 14-18 32-18s32 6 32 18-14 17-32 17-32-5-32-17Z" fill="url(#gMid)"/>
+  <path d="M39 60c6-5 14-7 23-7" fill="none" stroke="#fff" stroke-opacity=".42" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="59" cy="50" rx="19" ry="3.6" fill="#04403f" opacity=".3"/>
+  <!-- top stone -->
+  <path d="M38 40c0-9 9-14 21-14s21 5 21 14-9 13-21 13-21-4-21-13Z" fill="url(#gTop)"/>
+  <path d="M46 35c4-3 9-4 14-4" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2.6" stroke-linecap="round"/>
+  <!-- spark -->
+  <circle cx="61" cy="12" r="11" fill="url(#gSpark)"/>
+  <path d="M61 4.5l2.2 5.3 5.3 2.2-5.3 2.2L61 19.5l-2.2-5.3-5.3-2.2 5.3-2.2Z" fill="#fff"/>
+</svg>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Cairn — commitment pools judged by AI · GenLayer</title>
+    <meta name="description" content="Cairn is a GenLayer Intelligent Contract where groups stake on keeping a promise. An AI judge reads the evidence and can only be as generous as the pool allows." />
+    <meta name="theme-color" content="#f6f4ee" />
+    <meta property="og:title" content="Cairn — commitment pools judged by AI" />
+    <meta property="og:description" content="Stake on your word. Let the evidence decide. Built on GenLayer Studionet." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <script>
+      // Set the theme before the first paint so that there is no flash.
+      (function () {
+        try {
+          var t = localStorage.getItem("cairn.theme");
+          if (t !== "light" && t !== "dim") t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dim" : "light";
+          document.documentElement.setAttribute("data-theme", t);
+          document.documentElement.style.colorScheme = t === "dim" ? "dark" : "light";
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.setAttribute("content", t === "dim" ? "#1b2038" : "#f6f4ee");
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root">
+      <div style="display:grid;place-items:center;min-height:100vh;font-family:system-ui,sans-serif;opacity:.6">Loading Cairn…</div>
+    </div>
+    <noscript>Cairn needs JavaScript to talk to your wallet and to GenLayer.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
