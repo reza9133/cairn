@@ -254,6 +254,14 @@ run. The exit code is 1 when any check failed.
 
 ---
 
+## Website
+
+`frontend/` is the web app for this contract (Vite + React + three.js + genlayer-js): pools, create, claims, judging, ledger and full documentation, with EIP-6963 wallet connect and a Studionet network switch. See [frontend/README.md](frontend/README.md).
+
+```bash
+cd frontend && npm install && npm run dev
+```
+
 ## Layout
 
 ```
