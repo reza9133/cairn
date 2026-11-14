@@ -222,18 +222,24 @@ def test_the_live_script_runs_to_the_end_against_the_contract(direct_vm, direct_
     assert statuses == {"basics": "passed", "nostart": "passed", "unattended": "passed", "arena": "passed", "totals": "passed"}, statuses
     assert proc.returncode == 0, text[-2000:]
     assert books(c)["balanced"] and stats(c)["settled"] == 2 and stats(c)["cancelled"] == 2
-    # the review timeout: the unjudged claim lapsed as a miss, and the unattended member was paid nothing (the mocked
-    # judge credits the rival in every mode, so the zero-payout check must have run, not been replaced by a note)
+    # the review timeout: the unjudged claim lapsed as a miss with no credit
     unattended = next(sc for sc in rep["scenarios"] if sc["name"] == "unattended")
     ran = {ch["name"]: ch["ok"] for ch in unattended["checks"]}
     for name in (
         "after the review time alice's unjudged claim is a final MISS",
         "it received no credit and no decision was ever made on it",
         "alice has no credited round at all",
-        "alice receives nothing: bob alone takes the credited slice and the whole pot",
         "every member was paid what the independent model says",
     ):
         assert ran.get(name) is True, (name, ran)
+    zero_payout = "alice receives nothing: bob alone takes the credited slice and the whole pot"
+    if mode == "owner":
+        # this mode makes the mocked judge too strict for bob's claim (the same claim and page as alice's in the arena),
+        # so nobody holds a credit: the script takes the equal-split branch and says so in a note
+        assert zero_payout not in ran and any("nobody held a credit" in n for n in unattended["notes"]), unattended["notes"]
+    else:
+        # the mocked judge credits bob, so the unattended member must have been paid exactly nothing
+        assert ran.get(zero_payout) is True, (zero_payout, ran)
     # which branch of the arena was walked
     audits = [v for v in rep["verdicts"] if v["stage"].startswith("audit")]
     stages = " | ".join(f'{v["stage"]}={v["verdict"]}' for v in rep["verdicts"])

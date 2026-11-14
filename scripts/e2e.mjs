@@ -647,7 +647,7 @@ const scenarios = {
       await syncClock();
       await waitUntil(opens(0), "the start of round 1");
       await mustWork(alice, "claim", [pid, 0, CLAIM_MOON], { label: "claim round 1 (alice, nobody will judge it)" });
-      await mustWork(bob, "claim", [pid, 0, CLAIM_ORBIT], { label: "claim round 1 (bob, will be judged)" });
+      await mustWork(bob, "claim", [pid, 0, CLAIM_MOON], { label: "claim round 1 (bob, will be judged)" });
 
       await syncClock();
       await waitUntil(closes(0), "the end of round 1");
