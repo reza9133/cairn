@@ -25,7 +25,8 @@ except Exception:  # without the standard table a few common references are stil
 OPEN, CANCELLED, SETTLED = range(3)
 
 # ---- round claims (one per member and round) --------------------------------------------------------------------------
-# CLAIMED  filed, waiting for the AI judge (an unjudged claim is credited once its review time is over)
+# CLAIMED  filed, waiting for the AI judge (a claim the judge never assessed before its review time ran out is a final
+#          miss: it is never credited without a completed judgement, audit or referee ruling)
 # PASSED   the round counts for the member
 # MISSED   the round does not count; its slice of the stake goes to the pot
 CLAIMED, PASSED, MISSED = range(3)
@@ -54,7 +55,7 @@ MAX_URL = 300
 MIN_ROUND, MAX_ROUND = 60, 30 * 86400  # length of one round
 MIN_START, MAX_START = 60, 30 * 86400  # how long from now the pool starts
 MAX_GRACE = 7 * 86400  # extra time to file a claim after its round closed
-MIN_REVIEW, MAX_REVIEW = 600, 30 * 86400  # time for somebody to ask the judge before a claim counts by default
+MIN_REVIEW, MAX_REVIEW = 600, 30 * 86400  # time for somebody to ask the judge before an unjudged claim lapses as a miss
 MIN_DISPUTE, MAX_DISPUTE = 120, 7 * 86400  # time to contest a judgement
 DEFAULT_GRACE, DEFAULT_REVIEW, DEFAULT_DISPUTE = 600, 3 * 86400, 3600
 DEFAULT_DOUBT = 35  # the judge credits a round only when its doubt is at most this
@@ -140,7 +141,7 @@ class Slot:
     state: u8
     decided_by: u8
     claimed_at: u64
-    judge_by: u64  # after this a claim nobody judged counts as credited
+    judge_by: u64  # after this a claim nobody judged is a final miss (it never counts without a completed judgement)
     decided_at: u64
     final: bool  # no contest, audit or ruling can change the outcome any more (set explicitly)
     tries: u8
@@ -698,7 +699,7 @@ class Cairn(gl.Contract):
     def set_terms(self, pool_id: int, grace: int, review_span: int, dispute_span: int, doubt_limit: int) -> None:
         """Before the start, the organizer tunes the time limits and the judge's strictness. `grace` is the extra time
         to file a claim after its round closed. `review_span` is how long somebody has to ask the judge before an
-        unjudged claim counts. `dispute_span` is how long a judgement can be contested. `doubt_limit` (0 to 100) is
+        unjudged claim lapses as a miss. `dispute_span` is how long a judgement can be contested. `doubt_limit` (0 to 100) is
         the highest doubt at which the judge may still credit a round."""
         p = self._pool(pool_id)
         self._organizer_only(p)
@@ -855,7 +856,8 @@ class Cairn(gl.Contract):
         """Anyone asks the AI judge about a claim once its round has closed. The model reads the rules, the claim and
         the member's evidence page, and its answer is settled against the pool's doubt limit: it can credit a round
         only when it says MET with low doubt. An unreadable page is retried every two minutes, three times, and then
-        the round counts as missed. A claim nobody judges within the review time is credited."""
+        the round counts as missed. A claim that has not been judged to completion when its review time is over is a
+        final miss: it is never credited by default."""
         p = self._pool(pool_id)
         now = _now()
         self._must_be_running(p, now)
@@ -866,7 +868,7 @@ class Cairn(gl.Contract):
         if now < _close_at(p, round_no):
             raise gl.vm.UserError("The round is still running. The judge looks at it after it closes.")
         if now >= int(s.judge_by):
-            raise gl.vm.UserError("The review time is over; a claim nobody judged counts as credited.")
+            raise gl.vm.UserError("The review time is over; a claim nobody judged counts as missed.")
         if int(s.tries) > 0 and now < int(s.last_try) + RETRY_GAP:
             raise gl.vm.UserError("Wait two minutes before asking again.")
         e = p.entrants[ei]
@@ -1291,8 +1293,11 @@ class Cairn(gl.Contract):
         s = self.slots[ix]
         final = self._is_final(p, s, now)
         if int(s.state) == CLAIMED:
-            if final:  # nobody asked the judge in time: the claim counts
-                return {"slot": ix, "state": "PASSED", "credited": True, "final": True}
+            # No completed judgement exists for this claim. While its review time runs it waits for the judge; once that
+            # time is over it is a final miss. The timeout never credits: only a finished judgement, audit or referee
+            # ruling can make a round count. Every view and settle read this one function, so they all agree.
+            if final:
+                return {"slot": ix, "state": "MISSED", "credited": False, "final": True}
             return {"slot": ix, "state": "CLAIMED", "credited": False, "final": False}
         passed = int(s.state) == PASSED
         return {"slot": ix, "state": "PASSED" if passed else "MISSED", "credited": passed, "final": final}

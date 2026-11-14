@@ -91,7 +91,7 @@ export function ScheduleCalculator() {
               })}
             </tbody>
           </table>
-          <p className="muted small">The whole pool can be settled once the last round has closed and every round is final: not before T+{fmtDuration(n * len + Math.min(dispute, grace + dispute), 3)} in the best case, and by T+{fmtDuration(n * len + grace + review, 3)} even if nobody does anything (unjudged claims credit after the review time).</p>
+          <p className="muted small">The whole pool can be settled once the last round has closed and every round is final: not before T+{fmtDuration(n * len + Math.min(dispute, grace + dispute), 3)} in the best case, and by T+{fmtDuration(n * len + grace + review, 3)} even if nobody does anything (an unjudged claim lapses as a miss after the review time).</p>
         </div>
       )}
     </div>

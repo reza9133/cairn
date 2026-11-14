@@ -50,7 +50,7 @@ When the contract refuses a call it raises a plain-language message. The transac
 | That member made no claim for that round. | nothing to judge |
 | That claim has already been judged. | the judgement stands until contested |
 | Wait two minutes before asking again. | the page could not be read; retries are spaced by two minutes |
-| The review time is over; a claim nobody judged counts as credited. | nothing to do |
+| The review time is over; a claim nobody judged counts as missed. | nothing to do; the claim is a final miss |
 | [LLM_ERROR] the judge did not return … | the model answered in an unusable format; try again |
 
 ## Contests and rulings

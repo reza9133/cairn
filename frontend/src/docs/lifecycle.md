@@ -26,7 +26,7 @@ For round `r` (starting at 0), with the pool starting at `start`, a round length
 | `start + r*len` | the round **opens**: claims for it are accepted |
 | `start + (r+1)*len` | the round **closes**: the judge can be asked about its claims |
 | `start + (r+1)*len + grace` | the **last moment to claim** (a round without a claim is a final miss) |
-| `max(close, claim time) + review_span` | **`judge_by`**: a claim nobody judged counts as credited from here on |
+| `max(close, claim time) + review_span` | **`judge_by`**: a claim nobody judged is a final miss from here on (it never counts without a completed judgement) |
 | judgement time + `dispute_span` | the judgement becomes **final**, unless it was contested |
 | contest time + 1 day | a contest nobody audited **lapses**; the bond goes back and the judgement stands |
 

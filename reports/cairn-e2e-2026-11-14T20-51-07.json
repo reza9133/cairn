@@ -2,22 +2,23 @@
   "title": "Cairn live test on Studionet",
   "network": "studionet",
   "rpc": "https://studio.genlayer.com/api",
-  "contract": "0x6a5413E33cDE24E7C2d84d8df134D6a47328f935",
-  "startedAt": "2026-11-10T06:55:52.952Z",
-  "finishedAt": "2026-11-10T07:30:39.894Z",
+  "contract": "0xf790864fc7b48FeeFA01f204E39ecaE9d9506849",
+  "startedAt": "2026-11-14T20:51:07.626Z",
+  "finishedAt": "2026-11-14T21:45:21.258Z",
   "finished": true,
   "accounts": {
-    "organizer": "0x03C6BB36fc0e3B35c2f13c4267d8edFcE866c55C",
-    "alice": "0xb5b46ccb44E78dE06d0E6Fe237D5515Ff35E4c27",
-    "bob": "0xE1E5f29212801cbe3AF434C3Ea2DbBE7e1C1C3e2",
-    "carol": "0x5bA5Cbb0eeF3D1988011e4B9b0C5473706a4BeE6",
-    "referee": "0xA5B56B89D7a998DFB7863BA154bC46E8597305c4",
-    "outsider": "0xa19e6DAd0e8603e71CB033C33642F24702476582"
+    "organizer": "0xfDdC15f450d2189659581a3cb37Fe6CFf3A593Da",
+    "alice": "0x816BB3281F5ce9E5CFAEF5072cf166Dd818081ed",
+    "bob": "0xB331C6c6096346630D130EC4dB34fB85F5EdE8C4",
+    "carol": "0xC271646A688eD1afC0cE34498BDfc69AA12027C9",
+    "referee": "0xED06CDf4ab8C579Fa0bd7728eC756F9DC4093707",
+    "outsider": "0xF81654D94Db305F3139FcB46d236a6A2b0F34f98"
   },
   "inputs": {
     "scenarios": [
       "basics",
       "nostart",
+      "unattended",
       "arena"
     ],
     "stake": "6000000000000000",
@@ -47,38 +48,48 @@
     "bonds": "0"
   },
   "statsAfter": {
-    "pools": 3,
-    "claims": 5,
-    "settled": 1,
+    "pools": 4,
+    "claims": 7,
+    "settled": 2,
     "cancelled": 2,
-    "judgements": 7,
+    "judgements": 8,
     "contests_upheld": 1,
     "contests_dismissed": 1,
     "overruled": 1,
-    "volume": "18000000000000000",
-    "deposited": "56000000000000000",
-    "paid": "56000000000000000",
+    "volume": "30000000000000000",
+    "deposited": "68000000000000000",
+    "paid": "68000000000000000",
     "bonds": "0"
   },
   "verdicts": [
+    {
+      "scenario": "unattended",
+      "stage": "judge bob round 1",
+      "verdict": "UNCLEAR",
+      "doubt": 95,
+      "flags": [
+        "unverifiable"
+      ],
+      "reason": "The excerpt identifies Wikipedia's Moon article but shows neither the claimed orbital period nor evidence dated within the round."
+    },
     {
       "scenario": "arena",
       "stage": "judge alice round 1",
       "verdict": "MET",
       "doubt": 0,
       "flags": [],
-      "reason": "The evidence is a valid encyclopedia article about the Moon, and the claim accurately reflects a fact stated in the article."
+      "reason": "The evidence page is a Wikipedia article about the Moon and the claim states a standard fact about it."
     },
     {
       "scenario": "arena",
       "stage": "judge bob round 1",
       "verdict": "NOT_MET",
-      "doubt": 98,
+      "doubt": 100,
       "flags": [
         "mismatch",
         "off_rules"
       ],
-      "reason": "The evidence is a Mars article, not an encyclopedia article about the Moon, so it does not support the Moon claim."
+      "reason": "The evidence is a Wikipedia article about Mars, not the Moon, and does not support the claim."
     },
     {
       "scenario": "arena",
@@ -94,11 +105,12 @@
       "scenario": "arena",
       "stage": "audit alice round 1",
       "verdict": "UNCLEAR",
-      "doubt": 72,
+      "doubt": 92,
       "flags": [
-        "unverifiable"
+        "unverifiable",
+        "vague"
       ],
-      "reason": "Evidence is undated Wikipedia content with no timestamp placing the read inside the 4-minute round window."
+      "reason": "The excerpt shows only navigation, not the claimed fact, and provides no dated evidence of the member reading during the round."
     },
     {
       "scenario": "arena",
@@ -114,12 +126,12 @@
       "scenario": "arena",
       "stage": "judge bob round 2",
       "verdict": "NOT_MET",
-      "doubt": 98,
+      "doubt": 97,
       "flags": [
         "mismatch",
         "off_rules"
       ],
-      "reason": "The evidence is a Wikipedia article about Mars, not the Moon, so it does not support the Moon claim or fit the rules."
+      "reason": "The evidence page is the Wikipedia article on Mars, not the Moon; the rules require an encyclopedia article about the Moon."
     },
     {
       "scenario": "arena",
@@ -127,9 +139,11 @@
       "verdict": "NOT_MET",
       "doubt": 100,
       "flags": [
-        "mismatch"
+        "mismatch",
+        "off_rules",
+        "unverifiable"
       ],
-      "reason": "The evidence page is a Wikipedia article about Earth, not an encyclopedia article about the Moon as required by the rules."
+      "reason": "The evidence is an article about Earth, not the Moon, and the supplied text does not support the claim about a breathable atmosphere."
     }
   ],
   "scenarios": [
@@ -145,7 +159,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0xdfb7c6143ac6084cbdacbfa6c31db161a7f4305c8453892aa256e5ddb8718585",
+          "hash": "0x93598f19f951a0b608d0c573705094526c932a853fbbb359601cf5a2bd50cf54",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -156,7 +170,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0xf6f229e58a2183085f004d47a864e7d1062d396af238578ef0112809676d8245",
+          "hash": "0x740d3736e8fffb56fda177cb4ecda96b1753475bee88b28e3e9db03bd4739f20",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -167,7 +181,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0xe73aedfa1252a4ee7c55302072a691c32b1652a3f79652263adbf4e4fd476a21",
+          "hash": "0x12b16204491cf1343daf841abd521bd553c0b01d2491b5b7442807548d00de48",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -178,7 +192,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x21e9b98b7f4883d0ad11c3ca6e4842f5afb12f4a8e0fe96dacaffe58ecb30eb0",
+          "hash": "0x62d17960da3f78cd9c18235efd709c2b2ae9c67ad53ff1a75e7f088dbe9c9fb6",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -189,7 +203,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0x7baf796ac4801130723f308ec74e97099f6e30f3d3b1c729b96c9c72cbe814bb",
+          "hash": "0xc523f030697447c655de110ba41a8cc0bc78ad79175c638d6a6a6a720af7d797",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -200,7 +214,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0xd41509a5a1c036b4d8f4c3604a2e118be88ad6ffa744b6ae28def1cff70c52ed",
+          "hash": "0x6bd86d44b5dec600741bcb2489c9416129fe195f9090917c55fca001848bfe9e",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -211,7 +225,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x1f0cc88a5d7fac06b56b8b188cfab481704647d8b73e6f4fe665fa25d9365c84",
+          "hash": "0x201e4ac522ac3bbb97c4b019fcab7545755952c34f8366f141d9629567811bc0",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -222,7 +236,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0xb7f7d930eae76de1e2a1f40b0869d0dac2cc16c88a9aabf8dc3f2516618a975c",
+          "hash": "0xba6f4c90dd5e2615d70a6786478c3836d74388072ffe81ea729fdbc64e402376",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -233,7 +247,7 @@
           "value": "6000000000000000",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0xf1a1b63ef17ae7033e2185a1412a0a2521c7320227ea3fb0436bbdb94a2b65b8",
+          "hash": "0x1fd9e762be6e1191a2512f5176215f4c0e84895d757f5c7a1322d882852d7b5c",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -244,7 +258,7 @@
           "value": "6000000000000000",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0x00b46ed0d3df2f3a93f72aadeca28d7d7d847410849a6e7704d85790381b42e0",
+          "hash": "0xfe37210f3ef9d5196db83d81cd4695da8e8af2124ce018b83478e2c389c916e6",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -255,7 +269,7 @@
           "value": "6000000000000000",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x0c09572e53ba5d1083f7dc3d2de1cff7ab6b04406745710a7bcb9577ced9392d",
+          "hash": "0xab148ee23c6ec7777c49b164fadc9e3cf2d27f006d0f7676f08ea2cbcd1f67b7",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -266,7 +280,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0xe246358e5f57df48c192cd2bd0815b15802163577a15ae3045de7d4f86069731",
+          "hash": "0x473b8e0bce861ada7fd668338cb241fb5fccda6bc4c9dde80c93775c80c5090a",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -277,7 +291,7 @@
           "value": "6000000000000000",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0x3a779f4c39985ab0eaf7a5553905e67308cc943d4dc0d9f98fc2727590f9cef8",
+          "hash": "0x61ba5c585565b469663ad12e8a84a7786677d75eba4a89ed008988524005c0a2",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -288,7 +302,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0xa80d397ba5bf31f19bab27878d5fd0cf95c83a7715fe01ed510e5743d9c05f55",
+          "hash": "0x96e2043a522f26730855428d047eb6b23d3f9e3a61d1971be0c2e72822687f79",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -299,7 +313,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0x09a7cfb1869c2fcb4f8bbbc1436333f0a88702d0325484e5b07b0b4d2e34fc3a",
+          "hash": "0x1e55b3e31e1822194caefca101978c840c19c882e6f7875f45d22fc8d9aecce5",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -310,7 +324,7 @@
           "value": "6000000000000000",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0xd25373ed9293d36c3c5637b35e368e85cd85c0e0aa493d8b0da2e747ab5e934d",
+          "hash": "0xf4972711b4fc9e7584da44a4623ab99854fb3936a0217f2a19dd1c25f4dc7396",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -321,7 +335,7 @@
           "value": "6000000000000000",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0xbff8a7417c90d921217e20da26fcd7a6d1681003f1d9b972abc5955eebbea95b",
+          "hash": "0x13489bac3824141ad93c7ce42c380dabc48b13991f1afbacba4b89a62f3c9252",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -332,7 +346,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0xc541bb0f019b75728b122a257a1ac17c18362d4589de09d580f620dcf051badd",
+          "hash": "0x9035bd23d65f281723ae9f15539aa0d2e0467b14d749adf4d1a8a1d61478f7f9",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -343,7 +357,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0xdbd9cb35b51e5240a5164bd3aef3b397816666b969a0f2ceebf5b16da049f339",
+          "hash": "0x8fbc2cb1767f277dfcd5a2a31e09cd90db6bf8b98e40a4d2627cf24dafa2d830",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -354,7 +368,7 @@
           "value": "6000000000000000",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x99864a0167d536b5cdcbe65c65bba434e4066bd11dd256b2df69f391c65c3244",
+          "hash": "0x888873fee819ffb5250ff83b7d1337072b67770381fae7685f0cf04373a490cc",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         }
@@ -627,7 +641,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0xd0152738b34fb0530dbda805f21fd5a513a6f6531f87c9e19c790410bb493886",
+          "hash": "0xe2713755d95e7ef9d810c8f500e35dfd4224d009047dd878e5d195daee714ece",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -638,7 +652,7 @@
           "value": "6000000000000000",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0x212eccdf5ef554ed89acd26c00b6ef51788b4e483a13652c2da587687684bcd2",
+          "hash": "0x1bf2b3b99bdd2e22c12ea1afc472ac66509954c11301c43dd9c2a75c19f8a239",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -649,7 +663,7 @@
           "value": "6000000000000000",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0x972f2f878c23b13c530803bef287014797d0a7f445c69a8a85f6c97b7151d91b",
+          "hash": "0xe91a5dff58681750dcd1dcbbbeaa07e6ba2e001cca608495280a9aac8cbfa73c",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -660,7 +674,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0xc97e87676d43536c949ff060e4810301309cc02ed282fc8e675e157e2cd31117",
+          "hash": "0x78b234ae15568f3efc0be3bfb53c62bb116e841211fbbe67470c5a665f19945b",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -671,7 +685,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x6de63ffd48b5e7531dd6bf51db5b8820119702cd9873dffd80747664838a3adb",
+          "hash": "0x6dd172f7bff7462c1119e3a6d4121261251dda136861ab96c92802eba77eece1",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -682,7 +696,7 @@
           "value": "6000000000000000",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x18060e8469e49a2650c640b662affc9a2ecc73863b102a47af83ca4d24791720",
+          "hash": "0x65b21a2b23c0c9198a3a2c6be31523af9a3058c6b7b6af4076670acf8dcfc11c",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -693,7 +707,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x87637e95d4c57b3f4f3c71c435b9e236030872a760aef20faa07cc1e4b21bc20",
+          "hash": "0xf79a0c3f6816707eeb1b2ee679c12fbeda78a019afd01bbd0ef32241f042b924",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -704,7 +718,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0x1a2ae1247a83116972f189a3bb0086742aa74a8d890d0c24060e82bf5d74b37d",
+          "hash": "0xb78a0842065225c9184690eaaa995f55f418a89e2ad850ebfb74bf9e3f51e5ef",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         }
@@ -809,6 +823,319 @@
       "notes": []
     },
     {
+      "name": "unattended",
+      "note": "a claim nobody sends to the judge is a final miss after its review time and never receives a credited slice",
+      "status": "passed",
+      "steps": [
+        {
+          "label": "create_pool",
+          "fn": "create_pool",
+          "caller": "organizer",
+          "value": "0",
+          "expectedFail": false,
+          "attempt": 1,
+          "hash": "0x6ed264cdb1bce3cee520e68d9d1111b96880ec760e8f8fdb41cc9650dd188325",
+          "ok": true,
+          "status": "ACCEPTED / SUCCESS"
+        },
+        {
+          "label": "set_terms",
+          "fn": "set_terms",
+          "caller": "organizer",
+          "value": "0",
+          "expectedFail": false,
+          "attempt": 1,
+          "hash": "0xa6b54c49a390070ffef317dc4ed2ab059dd1204cbe9fe542405132f625c3b0b9",
+          "ok": true,
+          "status": "ACCEPTED / SUCCESS"
+        },
+        {
+          "label": "join (alice)",
+          "fn": "join",
+          "caller": "alice",
+          "value": "6000000000000000",
+          "expectedFail": false,
+          "attempt": 1,
+          "hash": "0xb089d8b5674effe85aac77c021981ee730d4be5f50d4d0e8cad831e5409c386f",
+          "ok": true,
+          "status": "ACCEPTED / SUCCESS"
+        },
+        {
+          "label": "join (bob)",
+          "fn": "join",
+          "caller": "bob",
+          "value": "6000000000000000",
+          "expectedFail": false,
+          "attempt": 1,
+          "hash": "0xdd135d103bff02b0d6521afac51e9c4da8c4a8a5347f4e350f0ec09322f9b91a",
+          "ok": true,
+          "status": "ACCEPTED / SUCCESS"
+        },
+        {
+          "label": "claim round 1 (alice, nobody will judge it)",
+          "fn": "claim",
+          "caller": "alice",
+          "value": "0",
+          "expectedFail": false,
+          "attempt": 1,
+          "hash": "0xdd44997e143241c9f30f82a094614b10e5e69a01976d650be0f777e1b4048ddd",
+          "ok": true,
+          "status": "ACCEPTED / SUCCESS"
+        },
+        {
+          "label": "claim round 1 (bob, will be judged)",
+          "fn": "claim",
+          "caller": "bob",
+          "value": "0",
+          "expectedFail": false,
+          "attempt": 1,
+          "hash": "0xfec5119da5d4d07fb9c88cf3cb4f2c8429ef1e59f1de274366d8ebdeaa65c689",
+          "ok": true,
+          "status": "ACCEPTED / SUCCESS"
+        },
+        {
+          "label": "judge bob round 1",
+          "fn": "judge",
+          "caller": "outsider",
+          "value": "0",
+          "expectedFail": false,
+          "attempt": 1,
+          "hash": "0x924e3a40d562624e8d53e24ac54fd167c57a974634bab3da7154b2c4c65bdc92",
+          "ok": true,
+          "status": "ACCEPTED / SUCCESS"
+        },
+        {
+          "label": "judge a claim after its review time",
+          "fn": "judge",
+          "caller": "outsider",
+          "value": "0",
+          "expectedFail": true,
+          "attempt": 1,
+          "hash": "0xb17acd718101ae185272b51c7e2c37d530e917f81f136098621ccb933775b4ee",
+          "ok": false,
+          "status": "ACCEPTED / ERROR"
+        },
+        {
+          "label": "contest a claim nobody judged",
+          "fn": "contest",
+          "caller": "alice",
+          "value": "1000000000000000",
+          "expectedFail": true,
+          "attempt": 1,
+          "hash": "0xdf2f4d8b6f7921f6227b0289109cd2f802461c3f2ff3da27579dd389055c3d97",
+          "ok": false,
+          "status": "ACCEPTED / ERROR"
+        },
+        {
+          "label": "audit a round nobody contested",
+          "fn": "audit",
+          "caller": "outsider",
+          "value": "0",
+          "expectedFail": true,
+          "attempt": 1,
+          "hash": "0xe1f95582288b10819063044b318d89e0fe1276c1b9ccdca803f79428d447fcb9",
+          "ok": false,
+          "status": "ACCEPTED / ERROR"
+        },
+        {
+          "label": "settle (a stranger)",
+          "fn": "settle",
+          "caller": "outsider",
+          "value": "0",
+          "expectedFail": false,
+          "attempt": 1,
+          "hash": "0xdbbb0bc80f8252b1a31d23a6fb408d29a0cbb7012aafbad50c8662c5b4dd31bb",
+          "ok": true,
+          "status": "ACCEPTED / SUCCESS"
+        }
+      ],
+      "checks": [
+        {
+          "name": "create_pool succeeds",
+          "ok": true,
+          "detail": "ACCEPTED / SUCCESS"
+        },
+        {
+          "name": "the new pool is the newest one of the organizer",
+          "ok": true,
+          "detail": "id 2, pools before 2"
+        },
+        {
+          "name": "set_terms succeeds",
+          "ok": true,
+          "detail": "ACCEPTED / SUCCESS"
+        },
+        {
+          "name": "join (alice) succeeds",
+          "ok": true,
+          "detail": "ACCEPTED / SUCCESS"
+        },
+        {
+          "name": "alice joins",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "name": "join (bob) succeeds",
+          "ok": true,
+          "detail": "ACCEPTED / SUCCESS"
+        },
+        {
+          "name": "bob joins",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "name": "two members hold two stakes",
+          "ok": true,
+          "detail": "0.012 GEN"
+        },
+        {
+          "name": "claim round 1 (alice, nobody will judge it) succeeds",
+          "ok": true,
+          "detail": "ACCEPTED / SUCCESS"
+        },
+        {
+          "name": "claim round 1 (bob, will be judged) succeeds",
+          "ok": true,
+          "detail": "ACCEPTED / SUCCESS"
+        },
+        {
+          "name": "judging bob round 1 was decided",
+          "ok": true,
+          "detail": "ACCEPTED / SUCCESS"
+        },
+        {
+          "name": "bob round 1: the round counts exactly when the judge said MET",
+          "ok": true,
+          "detail": "UNCLEAR, doubt 95, state MISSED"
+        },
+        {
+          "name": "bob round 1: MET is only possible with a doubt at the limit or below",
+          "ok": true,
+          "detail": "doubt 95, limit 35"
+        },
+        {
+          "name": "bob round 1: the decision is the AI's and is open to contest",
+          "ok": true,
+          "detail": "decided by 1"
+        },
+        {
+          "name": "while the review time runs alice's claim only waits: no credit and not final",
+          "ok": true,
+          "detail": "CLAIMED, final false"
+        },
+        {
+          "name": "alice's claim has a review deadline after the end of the round",
+          "ok": true,
+          "detail": "judge_by 1794690951, round closed at 1794690351"
+        },
+        {
+          "name": "the standing view counts the waiting claim as pending, not credited",
+          "ok": true,
+          "detail": "credited 0, pending 2"
+        },
+        {
+          "name": "after the review time alice's unjudged claim is a final MISS",
+          "ok": true,
+          "detail": "MISSED, final true"
+        },
+        {
+          "name": "it received no credit and no decision was ever made on it",
+          "ok": true,
+          "detail": "credited false, decided by 0"
+        },
+        {
+          "name": "her marks show a miss, not a credit",
+          "ok": true,
+          "detail": "M_"
+        },
+        {
+          "name": "judge a claim after its review time is refused by the contract",
+          "ok": true,
+          "detail": "ACCEPTED / ERROR"
+        },
+        {
+          "name": "judge a claim after its review time changed no totals",
+          "ok": true,
+          "detail": "3/48000000000000000/36000000000000000/0/2/1"
+        },
+        {
+          "name": "contest a claim nobody judged is refused by the contract",
+          "ok": true,
+          "detail": "ACCEPTED / ERROR"
+        },
+        {
+          "name": "contest a claim nobody judged changed no totals",
+          "ok": true,
+          "detail": "3/48000000000000000/36000000000000000/0/2/1"
+        },
+        {
+          "name": "audit a round nobody contested is refused by the contract",
+          "ok": true,
+          "detail": "ACCEPTED / ERROR"
+        },
+        {
+          "name": "audit a round nobody contested changed no totals",
+          "ok": true,
+          "detail": "3/48000000000000000/36000000000000000/0/2/1"
+        },
+        {
+          "name": "every round is final",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "name": "alice has no credited round at all",
+          "ok": true,
+          "detail": "credits 0/0"
+        },
+        {
+          "name": "the standing view projects the payouts of the independent model",
+          "ok": true,
+          "detail": "credits 0/0 -> 0.006 GEN, 0.006 GEN"
+        },
+        {
+          "name": "the standing view projects nothing for alice's unattended claim while bob holds a credit",
+          "ok": true,
+          "detail": "0.006 GEN"
+        },
+        {
+          "name": "settle (a stranger) succeeds",
+          "ok": true,
+          "detail": "ACCEPTED / SUCCESS"
+        },
+        {
+          "name": "the pool is settled and empty",
+          "ok": true,
+          "detail": ""
+        },
+        {
+          "name": "every member was paid what the independent model says",
+          "ok": true,
+          "detail": "paid 0.006 GEN, 0.006 GEN"
+        },
+        {
+          "name": "alice's unattended claim is on record as no credited round",
+          "ok": true,
+          "detail": "0"
+        },
+        {
+          "name": "the payouts add up to everything the pool held",
+          "ok": true,
+          "detail": "0.012 GEN"
+        },
+        {
+          "name": "the books balance after the settlement",
+          "ok": true,
+          "detail": "deposited 0.048 GEN, paid 0.048 GEN, held 0 GEN, bonds 0 GEN"
+        }
+      ],
+      "notes": [
+        "the real AI did not credit bob's claim, so nobody held a credit and the pool was shared equally; the payout check against the model still ran, but the zero-payout check for alice needs a credited rival"
+      ]
+    },
+    {
       "name": "arena",
       "note": "a whole pool: three members, claims, the real AI judge and auditor, a referee, and the settlement",
       "status": "passed",
@@ -820,7 +1147,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0xad2194e40163373accbca10dddfd22cab7170078145400d04fedbc0cb3bcaeba",
+          "hash": "0x10e3cc0c94e12717f2222f25fe0e36a723712fa483305be45b7ca8828722c603",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -831,7 +1158,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0x46eadd763b3b94fd4cf7fa9e3905c62e86a7d4268e1e5dfe23406ad760964c7c",
+          "hash": "0x9708fd04269a5b5b85095b7969a78c152bdabc70f58ea2afc04b34ea5ccc16a5",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -842,7 +1169,7 @@
           "value": "6000000000000000",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0xe5c02fcc4928c1002be318848dd9e4a3ced7763c7ed3cc6b5e66d89c5fc8fcd8",
+          "hash": "0x6f42087267c8fa84acfd218c9adbea38ba316c6868e564b83e86efe292d0e899",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -853,7 +1180,7 @@
           "value": "6000000000000000",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0x6cad8cd600461a347c29fc611e342e904318cdee5b819f3f339ed78bb7162b46",
+          "hash": "0x7ab78dd3efd7973193b514f6068d6158f18a8e2e845a5b4e0f61490275596659",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -864,7 +1191,7 @@
           "value": "6000000000000000",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0x8e100f7e5867090636460b2834915af04ea970961def595642d993cc8ded5e54",
+          "hash": "0x68675c41c218e666210a9e1db59bb9ec81b6946cc49ec000934df73ae47276e6",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -875,7 +1202,7 @@
           "value": "6000000000000000",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0xae4c89e279efd8e937d7f915a4fbb1638f2d593b251e4f41d530482d2fbd2eaa",
+          "hash": "0x41b73c59eef69f1b912311cf3fd53841a1a3900acfcef57a0aee4ff039875860",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -886,7 +1213,7 @@
           "value": "6000000000000000",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x2dafd901f45b5a16bd876f3af0d6d3179c650f52d226505f26c1d5b1fa602780",
+          "hash": "0x669ae0c40007b64a98baa1b3555ce3cdb34cfca6a05646a73b26d21e3e090946",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -897,7 +1224,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x43cf8f14498a7a09ea530344f4fc2591cc8732d01356f7aee33ae7d5d2c79a3a",
+          "hash": "0xfb3d7f8fdcc2463594346232470350b89f9f1eec187db314c6cbe48c907ce8bc",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -908,7 +1235,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0xbfb18fdf26b175aa527daf2a28f93596c10e2425c7008af3aee66b1f52039e6b",
+          "hash": "0x8fd255049d210dbef642e212a1f4e60359a73f1b084ed6503192c926a471d570",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -919,7 +1246,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x716348e0ccff7841365ef16586c7fad279e1b3d3553e59f04879c591eb26023a",
+          "hash": "0x30e50af4317976ea0f9caa18bf8defa3a18ea582ebe4ab77a90318e63fe34a6a",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -930,7 +1257,7 @@
           "value": "6000000000000000",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x7c3ab2b0dce5475e6abefca4cb85c2ef57e618ded030df635d0415bbd1ca50fb",
+          "hash": "0x2e0e1190d9d2a97402f3e0cd48bee2e77bc900820fe6c2f8be75298f57855912",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -941,7 +1268,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x235ce337e2a2f50a2c6769c4caed481d7fb6cd14e581c8a7bc3876a5c0c34655",
+          "hash": "0x87b0db5b7ce426d5a65f064a55edb100c6ec67f79ee1f78d260da698c82e34cc",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -952,7 +1279,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0xf18fb2b43fd4300eac817cb1c65457f7b0dcdda6420e0e6564d421a74e4483e4",
+          "hash": "0x7bf5bbf3c959bccead2c18a746f9cb5d15887410d964d7877294a8baf0784d56",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -963,7 +1290,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0x793ac44d2c5a0517483cc561cb7ee2d9187d7c9f8aef24f99d3d643d1a5660de",
+          "hash": "0xf7958d0ca4cba8433c7f9a1149a9b13664d981d6059135995d8a14fbac029c79",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -974,7 +1301,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0x3f20bf1d0b5f68abb875a179f831bd81e45ba2bfaa466408f48be0d46f7ef404",
+          "hash": "0x49b2480283412b77f9fe2f2ab09c345410fa8bd6cb266856c9871d6a2a8ec64b",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -985,7 +1312,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x7666ce8bea7be88027108ad4c6aef7d1d345dd9fe63c6d82e624ac1c180159c2",
+          "hash": "0xcb051040af69d4ac24f0f57138abc23bb9560f3533c98a0fc44b9238a39a8d31",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -996,7 +1323,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x2c8a930727b90df70325fc04aad0cb91f28b5bd7d75559e0cae53bde1ca2b6d7",
+          "hash": "0x59c1bfc7c89e5dfca29c43ad1e96076d123478334977037a8d6657ff383201b8",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -1007,7 +1334,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x2b553bd0f84f5e37ea33a82ca7247c7356f476d123fa73b2a5dadfd95f3572a6",
+          "hash": "0xabb6192b7e7c63834b735bcb3ad7695083a24e18e9d5bde1473703b7738f93cc",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -1018,7 +1345,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x3326e08692f06933618ebc9e2473a39196cd3e3e5ceaadc99a92a924a01e6778",
+          "hash": "0xb1cc22e57b277f82643a482aec0661e2797bf1f56b8cf1e1f442bd6f06d99b4e",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -1029,7 +1356,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0xe4636083e83e9b84b1ece9c318be351eb28f221314d2d79696a5ccb1a4bb392f",
+          "hash": "0x0d0d70d7cc43d08d1d5a08ecc9d3c1aab2611831b637ecc3742b509f317e127a",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -1040,7 +1367,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0xd0b7a0a1fd92ddf3f2594b6e878c8c3e28c411cf2ca24c14a1459a8031d9b1ff",
+          "hash": "0xc0d89fe744b6da45383c220d8c96da354e3f35096beece10a21afef81ba18d72",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -1051,7 +1378,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0x8c3694cb1361f5236df9918bd84af07821d42549d54d2ac8f2240270c2e52c8f",
+          "hash": "0xdb4e4bc55d9f439a6b43f7e7ab3c287573984dea1fd1fddd9618b74db18f1073",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -1062,7 +1389,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0x670d692f133fc056a2a1c824c5cdca5e3e98efa701f688b485ab0838a1dd82c0",
+          "hash": "0xc1666d6560494a6a03918b659e7e6984f88cc4d4674968469bdbda0ccf65dbc1",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -1073,7 +1400,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0xd8dc22c31d02b55afebcad4e07afd58fe6fb3f8752392b94a726fe7e1e6eda85",
+          "hash": "0x4ea3410d7a96a44b1fd37ba0c114e83440adfc4710ec6c866c0cbd0edc07b334",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -1084,7 +1411,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x85e8f5fac55ee8d3f422a582db289c25eb5c31d0692bfba6c113e1aaad6263de",
+          "hash": "0x623b985e039b59f5e27d33b1f44fb4b0b65e0ed919a779ea7c44c55827147bf4",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -1095,7 +1422,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x5872533f377e74d81fc783bf8cc3b91cce9d35dd186229db015be74b98ad15b1",
+          "hash": "0x3e98a358f5a2ddfe506b1fb64624dc732dc9c316937708bcf8970225e11f05a2",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -1106,7 +1433,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0xf2b05381e0870709b96bdf53a9513aaac7728bc10db4a7648fe9fbe64d486594",
+          "hash": "0x1f6050c4047d2e0ed89fd080ec88d0b53798bdfac5052d567f84715de7b85ab7",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -1117,7 +1444,7 @@
           "value": "1000000000000000",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0x7758749581643d7f035b321398cb27cebe0479e45c5a3126fe3b1eb080803916",
+          "hash": "0x6b1cbc5f1ad4b333f6fc8ec3daab9c6f2b95a54e51022b807ae6e27779102248",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -1128,7 +1455,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0x94d78de3bd8bdfe5943ed2ba1e7f58878c02cf4a8493060171468c0059de8e4e",
+          "hash": "0x0d8ec8742700e31b5fd8031d0e2099a5999af80870f219b2c62b79b082af36c5",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -1139,7 +1466,7 @@
           "value": "1000000000000000",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0xe909c47a590e2e065543bbab7a9ae2f925c588c8825b4ec53d5f2fb133c15d38",
+          "hash": "0x4d8f841fe9726b00d19fbddae2c3d2eb282acbf57658f50f151daea80b96edf5",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -1150,7 +1477,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0xb8c03f5439f5bf8ab74e5110ca2ce99d0fcf4979aecb04c0846554327ada6e27",
+          "hash": "0x346b6196913597145991876a8830076616275a8d09522fa8fb4a308f4feed418",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -1161,7 +1488,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0x423bcf69d931d75246179ae989f0c8a1a9315b0697a4773939e2d5e6f88f272f",
+          "hash": "0x1ed5f98e06763ac6f1def76d5cc0de047843f33deb12afff5ced6f48e1254cf6",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -1172,7 +1499,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0xd2aba7a5e2be60ada8b63df87f1b140be3b725a14d6d4be8572d95c766c987cb",
+          "hash": "0x691c483f48d6c83c05fb0df906d9ac2e7aa92a292b43e0af6e2a28a6a9d8f584",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -1183,7 +1510,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0x7d427f41e898a4e13a7cda8fb3cc3207d0c5b010cb4e1f217aed8a3045cda4a0",
+          "hash": "0x0255b7dcad7e2411034e6b07884db9b82c57cee2781e839b835c717d8279ef2b",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -1194,7 +1521,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x728fd9af5c601ebdf41c5a5533094c685e18e5673b3eef8ae584d121c6c761db",
+          "hash": "0x20ceb2d25d4a53a8415ad54289104ecde49fbf1f8925baf2a6e6a2662c5903b9",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -1205,7 +1532,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x2d1a2a76c8e6073437d6405c700787e40bdbfb54c8de955127f2e5555340aace",
+          "hash": "0xc75cefb940a0dd5850d73bdaf88241da7d7186aa6a3463eefeb176fd3f28dfc0",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -1216,7 +1543,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x3f197e7ea5ff7d7506337ef61b7bc2f47102b616518e279da03fd88050afd5cf",
+          "hash": "0xedc54f547cc3437d69dcd9d3daf266711ced3fc5e382182e56e6eff5b9c1339f",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -1227,7 +1554,7 @@
           "value": "0",
           "expectedFail": false,
           "attempt": 1,
-          "hash": "0x1c681381520fdbe5d6b4608c28fded4277d424125199380fc5b9919123474588",
+          "hash": "0xe8d0e9ab12fbddfde0135e917c4809d46c074183c6fff40a5f91e12c4d666c87",
           "ok": true,
           "status": "ACCEPTED / SUCCESS"
         },
@@ -1238,7 +1565,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x26c6fa7a1bc079e054fc2aa424ffc095e76ef6e30e319c112f69b3ca416a5b3f",
+          "hash": "0xb37611869af47ddf119f375356d373a143143a1118e487928688f1396b8e6d9a",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         },
@@ -1249,7 +1576,7 @@
           "value": "0",
           "expectedFail": true,
           "attempt": 1,
-          "hash": "0x1efd4f567e9d5731fef5c57d286fac64176275e85cc613223891201634455ae6",
+          "hash": "0x15db4117e9396b7b033fb404360ef942c7f8339c351834d78f5bd2970e100dd5",
           "ok": false,
           "status": "ACCEPTED / ERROR"
         }
@@ -1263,7 +1590,7 @@
         {
           "name": "the new pool is the newest one of the organizer",
           "ok": true,
-          "detail": "id 2, pools before 2"
+          "detail": "id 3, pools before 3"
         },
         {
           "name": "set_terms succeeds",
@@ -1313,7 +1640,7 @@
         {
           "name": "the books balance after joining",
           "ok": true,
-          "detail": "deposited 0.054 GEN, paid 0.036 GEN, held 0.018 GEN, bonds 0 GEN"
+          "detail": "deposited 0.066 GEN, paid 0.048 GEN, held 0.018 GEN, bonds 0 GEN"
         },
         {
           "name": "join by the referee is refused by the contract",
@@ -1323,7 +1650,7 @@
         {
           "name": "join by the referee changed no totals",
           "ok": true,
-          "detail": "3/54000000000000000/36000000000000000/0/0/0"
+          "detail": "4/66000000000000000/48000000000000000/0/2/1"
         },
         {
           "name": "join again as a member is refused by the contract",
@@ -1333,7 +1660,7 @@
         {
           "name": "join again as a member changed no totals",
           "ok": true,
-          "detail": "3/54000000000000000/36000000000000000/0/0/0"
+          "detail": "4/66000000000000000/48000000000000000/0/2/1"
         },
         {
           "name": "claim before the start is refused by the contract",
@@ -1343,7 +1670,7 @@
         {
           "name": "claim before the start changed no totals",
           "ok": true,
-          "detail": "3/54000000000000000/36000000000000000/0/0/0"
+          "detail": "4/66000000000000000/48000000000000000/0/2/1"
         },
         {
           "name": "judge a claim that was never made is refused by the contract",
@@ -1353,7 +1680,7 @@
         {
           "name": "judge a claim that was never made changed no totals",
           "ok": true,
-          "detail": "3/54000000000000000/36000000000000000/0/0/0"
+          "detail": "4/66000000000000000/48000000000000000/0/2/1"
         },
         {
           "name": "settle before the pool ran is refused by the contract",
@@ -1363,7 +1690,7 @@
         {
           "name": "settle before the pool ran changed no totals",
           "ok": true,
-          "detail": "3/54000000000000000/36000000000000000/0/0/0"
+          "detail": "4/66000000000000000/48000000000000000/0/2/1"
         },
         {
           "name": "the pool is running",
@@ -1378,7 +1705,7 @@
         {
           "name": "join after the start changed no totals",
           "ok": true,
-          "detail": "3/54000000000000000/36000000000000000/0/0/0"
+          "detail": "4/66000000000000000/48000000000000000/0/2/1"
         },
         {
           "name": "leave after the start is refused by the contract",
@@ -1388,7 +1715,7 @@
         {
           "name": "leave after the start changed no totals",
           "ok": true,
-          "detail": "3/54000000000000000/36000000000000000/0/0/0"
+          "detail": "4/66000000000000000/48000000000000000/0/2/1"
         },
         {
           "name": "claim round 1 (alice) succeeds",
@@ -1413,7 +1740,7 @@
         {
           "name": "claim the same round twice changed no totals",
           "ok": true,
-          "detail": "3/54000000000000000/36000000000000000/0/3/0"
+          "detail": "4/66000000000000000/48000000000000000/0/5/1"
         },
         {
           "name": "claim a round that has not opened is refused by the contract",
@@ -1423,7 +1750,7 @@
         {
           "name": "claim a round that has not opened changed no totals",
           "ok": true,
-          "detail": "3/54000000000000000/36000000000000000/0/3/0"
+          "detail": "4/66000000000000000/48000000000000000/0/5/1"
         },
         {
           "name": "judge while the round is running is refused by the contract",
@@ -1433,7 +1760,7 @@
         {
           "name": "judge while the round is running changed no totals",
           "ok": true,
-          "detail": "3/54000000000000000/36000000000000000/0/3/0"
+          "detail": "4/66000000000000000/48000000000000000/0/5/1"
         },
         {
           "name": "contest a claim nobody judged is refused by the contract",
@@ -1443,7 +1770,7 @@
         {
           "name": "contest a claim nobody judged changed no totals",
           "ok": true,
-          "detail": "3/54000000000000000/36000000000000000/0/3/0"
+          "detail": "4/66000000000000000/48000000000000000/0/5/1"
         },
         {
           "name": "alice's claim waits for the judge",
@@ -1493,12 +1820,12 @@
         {
           "name": "bob round 1: the round counts exactly when the judge said MET",
           "ok": true,
-          "detail": "NOT_MET, doubt 98, state MISSED"
+          "detail": "NOT_MET, doubt 100, state MISSED"
         },
         {
           "name": "bob round 1: MET is only possible with a doubt at the limit or below",
           "ok": true,
-          "detail": "doubt 98, limit 35"
+          "detail": "doubt 100, limit 35"
         },
         {
           "name": "bob round 1: the decision is the AI's and is open to contest",
@@ -1508,7 +1835,7 @@
         {
           "name": "carol's steering claim is refused without the model",
           "ok": true,
-          "detail": "{\"at\":1794294861,\"verdict\":\"NOT_MET\",\"doubt\":100,\"flags\":[\"injection\"],\"reason\":\"The claim text tries to steer the judge.\",\"hash\":\"\"}"
+          "detail": "{\"at\":1794691754,\"verdict\":\"NOT_MET\",\"doubt\":100,\"flags\":[\"injection\"],\"reason\":\"The claim text tries to steer the judge.\",\"hash\":\"\"}"
         },
         {
           "name": "judge the same claim twice is refused by the contract",
@@ -1518,7 +1845,7 @@
         {
           "name": "judge the same claim twice changed no totals",
           "ok": true,
-          "detail": "3/54000000000000000/36000000000000000/0/5/3"
+          "detail": "4/66000000000000000/48000000000000000/0/7/4"
         },
         {
           "name": "overrule by a stranger is refused by the contract",
@@ -1528,7 +1855,7 @@
         {
           "name": "overrule by a stranger changed no totals",
           "ok": true,
-          "detail": "3/54000000000000000/36000000000000000/0/5/3"
+          "detail": "4/66000000000000000/48000000000000000/0/7/4"
         },
         {
           "name": "audit a round nobody contested is refused by the contract",
@@ -1538,7 +1865,7 @@
         {
           "name": "audit a round nobody contested changed no totals",
           "ok": true,
-          "detail": "3/54000000000000000/36000000000000000/0/5/3"
+          "detail": "4/66000000000000000/48000000000000000/0/7/4"
         },
         {
           "name": "contest alice round 1 (bob) succeeds",
@@ -1563,7 +1890,7 @@
         {
           "name": "bob's contest of alice: the auditor said UNCLEAR, so the contest is upheld",
           "ok": true,
-          "detail": "doubt 72"
+          "detail": "doubt 92"
         },
         {
           "name": "bob's contest of alice: the round ends MISSED, final, decided by the audit",
@@ -1633,12 +1960,12 @@
         {
           "name": "bob round 2: the round counts exactly when the judge said MET",
           "ok": true,
-          "detail": "NOT_MET, doubt 98, state MISSED"
+          "detail": "NOT_MET, doubt 97, state MISSED"
         },
         {
           "name": "bob round 2: MET is only possible with a doubt at the limit or below",
           "ok": true,
-          "detail": "doubt 98, limit 35"
+          "detail": "doubt 97, limit 35"
         },
         {
           "name": "bob round 2: the decision is the AI's and is open to contest",
@@ -1678,7 +2005,7 @@
         {
           "name": "overrule a final round changed no totals",
           "ok": true,
-          "detail": "3/56000000000000000/37750000000000000/0/5/7"
+          "detail": "4/68000000000000000/49750000000000000/0/7/8"
         },
         {
           "name": "claim after the claim time is refused by the contract",
@@ -1688,7 +2015,7 @@
         {
           "name": "claim after the claim time changed no totals",
           "ok": true,
-          "detail": "3/56000000000000000/37750000000000000/0/5/7"
+          "detail": "4/68000000000000000/49750000000000000/0/7/8"
         },
         {
           "name": "alice's unclaimed round is a final miss",
@@ -1703,7 +2030,7 @@
         {
           "name": "settle while rounds are still open changed no totals",
           "ok": true,
-          "detail": "3/56000000000000000/37750000000000000/0/5/7"
+          "detail": "4/68000000000000000/49750000000000000/0/7/8"
         },
         {
           "name": "the standing view lists the three members",
@@ -1758,7 +2085,7 @@
         {
           "name": "settle twice changed no totals",
           "ok": true,
-          "detail": "3/56000000000000000/56000000000000000/0/5/7"
+          "detail": "4/68000000000000000/68000000000000000/0/7/8"
         },
         {
           "name": "claim in a settled pool is refused by the contract",
@@ -1768,12 +2095,12 @@
         {
           "name": "claim in a settled pool changed no totals",
           "ok": true,
-          "detail": "3/56000000000000000/56000000000000000/0/5/7"
+          "detail": "4/68000000000000000/68000000000000000/0/7/8"
         },
         {
           "name": "the books balance after the settlement",
           "ok": true,
-          "detail": "deposited 0.056 GEN, paid 0.056 GEN, held 0 GEN, bonds 0 GEN"
+          "detail": "deposited 0.068 GEN, paid 0.068 GEN, held 0 GEN, bonds 0 GEN"
         }
       ],
       "notes": [
@@ -1791,7 +2118,7 @@
         {
           "name": "the contract's books balance at the end",
           "ok": true,
-          "detail": "deposited 0.056 GEN, paid 0.056 GEN, held 0 GEN, bonds 0 GEN"
+          "detail": "deposited 0.068 GEN, paid 0.068 GEN, held 0 GEN, bonds 0 GEN"
         },
         {
           "name": "no bond is left held",
@@ -1803,10 +2130,10 @@
     }
   ],
   "summary": {
-    "checks": 175,
-    "passed": 175,
+    "checks": 211,
+    "passed": 211,
     "failed": 0,
-    "transactions": 68,
+    "transactions": 79,
     "skipped": 0
   }
 }

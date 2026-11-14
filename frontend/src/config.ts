@@ -2,7 +2,7 @@
 
 /** The deployed Cairn contract on GenLayer Studionet. Override with VITE_CAIRN_ADDRESS at build time. */
 export const CONTRACT_ADDRESS: string =
-  (import.meta.env.VITE_CAIRN_ADDRESS as string | undefined)?.trim() || "0x6a5413E33cDE24E7C2d84d8df134D6a47328f935";
+  (import.meta.env.VITE_CAIRN_ADDRESS as string | undefined)?.trim() || "0xf790864fc7b48FeeFA01f204E39ecaE9d9506849";
 
 export const GITHUB_URL = "https://github.com/reza9133/cairn";
 export const X_URL = "https://x.com/amirhp771";

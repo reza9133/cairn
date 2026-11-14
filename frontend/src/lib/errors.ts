@@ -48,7 +48,7 @@ export const CONTRACT_ERRORS: string[] = [
   "The pool is full.",
   "The referee cannot join the pool.",
   "The review time has to be between 10 minutes and 30 days.",
-  "The review time is over; a claim nobody judged counts as credited.",
+  "The review time is over; a claim nobody judged counts as missed.",
   "The round is still running. The judge looks at it after it closes.",
   "The rules need 20 to 1200 characters.",
   "The stake is out of range.",

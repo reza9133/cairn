@@ -30,6 +30,29 @@ def check_books(c, ledger):
         standing(c, i)  # must never fail
 
 
+def neglected(seed, pid, who_hex, r):
+    """About a quarter of the claims are never sent to the judge by anybody: they have to lapse as a miss."""
+    return (seed + pid + r + int(who_hex[4:6], 16)) % 4 == 0
+
+
+def check_no_credit_without_a_decision(c, pid):
+    """No round ever counts unless somebody decided it (the judge, the audit or the referee): a claim that only waited,
+    whether it is still waiting or its review time is over, is worth nothing. Returns how many claims lapsed unjudged."""
+    row = prow(c, pid)
+    lapsed = 0
+    for m in row["members"]:
+        if m["left"]:
+            continue
+        for r in range(row["rounds"]):
+            rr = rrow(c, pid, m["who"], r)
+            assert rr["state"] != "PASSED" or rr["decided_by"] != BY_NONE, rr
+            assert not rr["credited"] or rr["decided_by"] != BY_NONE, rr
+            if rr["claimed"] and rr["decided_by"] == BY_NONE and rr["final"]:
+                assert rr["state"] == "MISSED" and not rr["credited"], rr
+                lapsed += 1
+    return lapsed
+
+
 def attempt(c, vm, fn, *args, who, value=0, strict=None):
     """Run a call. If it is refused, the contract must be exactly as before."""
     if strict is None:
@@ -115,7 +138,8 @@ def test_random_games_keep_the_books_and_end_paid_out(direct_vm, direct_deploy, 
             if kind == "claim":
                 attempt(c, vm, c.claim, pid, r, NOTE, who=target if aimed else member_who)
             elif kind == "judge":
-                attempt(c, vm, c.judge, pid, who_hex, r, who=rnd.choice(ACTORS))
+                if not neglected(seed, pid, who_hex, r):
+                    attempt(c, vm, c.judge, pid, who_hex, r, who=rnd.choice(ACTORS))
             elif kind == "contest":
                 rival = rnd.choice([m for m in MEMBERS if m != target] or MEMBERS)
                 attempt(c, vm, c.contest, pid, who_hex, r, "The log does not show an entry from this round.", who=target if rnd.random() < 0.4 else rival, value=bond if rnd.random() < 0.95 else 1)
@@ -139,17 +163,22 @@ def test_random_games_keep_the_books_and_end_paid_out(direct_vm, direct_deploy, 
             else:
                 attempt(c, vm, c.set_terms, pid, 300, 3600, 900, 35, who=rnd.choice(ACTORS))
             check_books(c, ledger)
+        if step % 20 == 0:
+            for pid in pids:
+                check_no_credit_without_a_decision(c, pid)
     # let everything run out, then make sure every pool can be closed and paid
     for pid in pids:
         row = prow(c, pid)
         if row["state"] != OPEN:
             continue
         at(vm, finished_at(c, pid) + 3 * 86400)
+        COUNT[("unattended", True)] = COUNT.get(("unattended", True), 0) + check_no_credit_without_a_decision(c, pid)
         if int(row["active"]) < row["min_entrants"]:
             assert attempt(c, vm, c.cancel_pool, pid, who=P.stranger, strict=False)
         else:
             assert attempt(c, vm, c.settle, pid, who=P.stranger, strict=False), "a finished pool must always be settleable"
         assert prow(c, pid)["state"] in (CANCELLED, SETTLED)
+        check_no_credit_without_a_decision(c, pid)
         check_books(c, ledger)
     assert books(c)["held"] == "0" and stats(c)["bonds"] == "0"
     assert int(stats(c)["deposited"]) == ledger.total() == int(stats(c)["paid"])
@@ -157,7 +186,7 @@ def test_random_games_keep_the_books_and_end_paid_out(direct_vm, direct_deploy, 
 
 def test_zz_the_fuzz_really_played():
     """The random games must have reached every stage, otherwise they prove little."""
-    needed = ["claim", "judge", "contest", "audit", "settle", "overrule", "join", "leave"]
+    needed = ["claim", "judge", "contest", "audit", "settle", "overrule", "join", "leave", "unattended"]
     if not COUNT:
         pytest.skip("the games did not run in this process")
     missing = [n for n in needed if COUNT.get((n, True), 0) == 0]

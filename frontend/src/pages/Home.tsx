@@ -27,7 +27,7 @@ const PRINCIPLES = [
   { icon: "lock" as const, title: "No claim, no credit", text: "A round without a claim is a deterministic miss. The model is never consulted about it." },
   { icon: "scale" as const, title: "The AI is a brake", text: "Its answer is measured against the pool's doubt limit. Too much doubt becomes UNCLEAR, and UNCLEAR never credits." },
   { icon: "gavel" as const, title: "Everything can be contested", text: "Put a bond on the table and a stricter second look decides. Rivals are paid for catching a wrong credit." },
-  { icon: "shield" as const, title: "Nobody can lock the pool", text: "Unjudged claims credit after their review time, unaudited contests lapse, and a pool with too few members is called off by anyone." },
+  { icon: "shield" as const, title: "Nobody can lock the pool", text: "Unjudged claims lapse as misses after their review time, unaudited contests lapse, and a pool with too few members is called off by anyone." },
 ];
 
 function Reveal({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {

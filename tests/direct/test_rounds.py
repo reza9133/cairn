@@ -141,17 +141,65 @@ def test_judge_refusals(direct_vm, direct_deploy):
     refuse(c, direct_vm, "No such pool", c.judge, 4, hx(P.a), 0, who=P.stranger)
 
 
-def test_a_claim_nobody_judged_counts_after_its_review_time(direct_vm, direct_deploy):
+def test_a_claim_nobody_judged_is_a_final_miss_after_its_review_time(direct_vm, direct_deploy):
     c, pid = claimed(direct_deploy, direct_vm)
     by = rrow(c, pid, P.a, 0)["judge_by"] - T0
     at(direct_vm, by - 1)
-    assert rrow(c, pid, P.a, 0)["state"] == "CLAIMED"
+    row = rrow(c, pid, P.a, 0)
+    assert row["state"] == "CLAIMED" and not row["credited"] and not row["final"]
     world(direct_vm)
     at(direct_vm, by)
     row = rrow(c, pid, P.a, 0)
-    assert row["state"] == "PASSED" and row["credited"] and row["final"] and row["decided_by"] == BY_NONE
-    refuse(c, direct_vm, "review time is over", c.judge, pid, hx(P.a), 0, who=P.stranger)
-    assert member(c, pid, P.a)["marks"] == "P__"
+    # no judgement was ever completed: the timeout is a miss, never a credit
+    assert row["state"] == "MISSED" and not row["credited"] and row["final"] and row["decided_by"] == BY_NONE
+    assert row["review"] is None and row["audit"] is None
+    refuse(c, direct_vm, "counts as missed", c.judge, pid, hx(P.a), 0, who=P.stranger)
+    assert member(c, pid, P.a)["marks"] == "M__"
+
+
+def test_the_review_deadline_never_takes_back_a_finished_judgement(direct_vm, direct_deploy):
+    """Only what nobody judged lapses: a judgement completed just before the deadline keeps its credit afterwards."""
+    c, pid = claimed(direct_deploy, direct_vm)
+    by = rrow(c, pid, P.a, 0)["judge_by"] - T0
+    judge(c, direct_vm, P.stranger, pid, P.a, 0, "MET", 10, offset=by - 1)
+    for t in (by - 1, by, by + 1):
+        at(direct_vm, t)
+        row = rrow(c, pid, P.a, 0)
+        assert row["state"] == "PASSED" and row["credited"] and row["decided_by"] == BY_AI
+    assert member(c, pid, P.a)["marks"] == "p__"
+
+
+def test_an_unreadable_page_still_being_retried_at_the_deadline_is_a_miss_not_a_credit(direct_vm, direct_deploy):
+    c, pid = claimed(direct_deploy, direct_vm)
+    t = close_of(c, pid, 0)
+    direct_vm.clear_mocks()
+    mock_page(direct_vm, status=500)
+    mock_judge(direct_vm)  # must not be reached
+    at(direct_vm, t)
+    act(direct_vm, P.stranger)
+    c.judge(pid, hx(P.a), 0)  # try 1 of 3; nobody asks again
+    row = rrow(c, pid, P.a, 0)
+    assert row["state"] == "CLAIMED" and row["tries"] == 1
+    at(direct_vm, row["judge_by"] - T0)
+    row = rrow(c, pid, P.a, 0)
+    assert row["state"] == "MISSED" and not row["credited"] and row["final"]
+    assert row["decided_by"] == BY_NONE and row["review"] is None and row["tries"] == 1
+
+
+def test_nothing_brings_an_unattended_claim_back_after_the_deadline(direct_vm, direct_deploy):
+    c, pid = running(direct_deploy, direct_vm, referee=hx(P.referee))
+    claim(c, direct_vm, P.a, pid, 0, offset=open_of(c, pid, 0) + 1)
+    at(direct_vm, rrow(c, pid, P.a, 0)["judge_by"] - T0)
+    world(direct_vm)
+    mock_auditor(direct_vm)
+    bond = bond_of(c, pid)
+    refuse(c, direct_vm, "counts as missed", c.judge, pid, hx(P.a), 0, who=P.stranger)
+    refuse(c, direct_vm, "Only a judgement of the AI", c.contest, pid, hx(P.a), 0, "Nobody ever looked at my claim.", who=P.a, value=bond)
+    refuse(c, direct_vm, "not under contest", c.audit, pid, hx(P.a), 0, who=P.stranger)
+    refuse(c, direct_vm, "already final", c.overrule, pid, hx(P.a), 0, True, "too late", who=P.referee)
+    row = rrow(c, pid, P.a, 0)
+    assert row["state"] == "MISSED" and not row["credited"] and row["final"]
+    assert stats(c)["judgements"] == 0 and books(c)["balanced"]
 
 
 def test_a_late_claim_gets_its_review_time_from_the_claim(direct_vm, direct_deploy):

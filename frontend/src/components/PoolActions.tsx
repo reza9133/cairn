@@ -90,7 +90,7 @@ function Terms({ pool, onClose }: Ctx) {
       lead="Only the organizer can do this, and only before the start."
       spec={() => ({ label: `Set terms of pool #${pool.id}`, fn: "set_terms", args: [pool.id, grace, review, dispute, d] })}>
       <Field label="Grace time" error={within(grace, LIMITS.grace) ? null : "0 to 7 days"} hint={`Extra time to file a claim after a round closed. Default ${fmtDuration(DEFAULTS.grace)}.`}><DurationInput seconds={grace} onChange={setGrace} units={["minutes", "hours", "days"]} /></Field>
-      <Field label="Review time" error={within(review, LIMITS.review) ? null : "10 minutes to 30 days"} hint={`How long somebody has to ask the judge before an unjudged claim counts. Default ${fmtDuration(DEFAULTS.review)}.`}><DurationInput seconds={review} onChange={setReview} /></Field>
+      <Field label="Review time" error={within(review, LIMITS.review) ? null : "10 minutes to 30 days"} hint={`How long somebody has to ask the judge before an unjudged claim lapses as a miss. Default ${fmtDuration(DEFAULTS.review)}.`}><DurationInput seconds={review} onChange={setReview} /></Field>
       <Field label="Dispute time" error={within(dispute, LIMITS.dispute) ? null : "2 minutes to 7 days"} hint={`How long a judgement can be contested. Default ${fmtDuration(DEFAULTS.dispute)}.`}><DurationInput seconds={dispute} onChange={setDispute} /></Field>
       <Field label="Doubt limit (0–100)" error={Number.isInteger(d) && within(d, LIMITS.doubt) ? null : "A whole number from 0 to 100"} hint={`A round counts only if the judge says MET with doubt at or below this. Lower is stricter. Default ${DEFAULTS.doubt}.`}><input inputMode="numeric" value={doubt} onChange={(e) => setDoubt(e.target.value)} /></Field>
     </Shell>
@@ -103,7 +103,7 @@ function Claim({ pool, now, myMarks, round, onClose }: Ctx & { round?: number })
   const [note, setNote] = useState("");
   return (
     <Shell title="File a claim" confirm="Send claim" valid={open.length > 0 && len(note, LIMITS.claim)} onClose={onClose}
-      lead="Say what you did in this round, in a sentence or two. The judge compares it with the rules and with your evidence page."
+      lead="Say what you did in this round, in a sentence or two. The judge compares it with the rules and with your evidence page. After the round closes, ask the judge before the review time ends: a claim nobody judged in time counts as missed."
       spec={() => ({ label: `Claim round ${r + 1} of pool #${pool.id}`, fn: "claim", args: [pool.id, r, note.trim()] })}>
       {open.length === 0 ? <Notice tone="warn">There is no round you can claim right now.</Notice> : (
         <>

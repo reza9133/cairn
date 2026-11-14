@@ -153,10 +153,52 @@ def test_settle_waits_for_a_claim_nobody_has_judged(direct_vm, direct_deploy, le
     at(direct_vm, end)
     refuse(c, direct_vm, "not final yet", c.settle, pid, who=P.stranger)
     by = rrow(c, pid, P.a, 0)["judge_by"] - T0
-    settle(c, direct_vm, pid, offset=by)  # never judged: the claim counts by default
-    assert rrow(c, pid, P.a, 0)["state"] == "PASSED"
-    # a: 1 credited round (2) + the whole pot (18 - 2 = 16) = 18
-    assert paid(ledger, (P.a, P.b, P.c)) == [18 * MILLI, 0, 0]
+    settle(c, direct_vm, pid, offset=by)  # never judged: the claim is a final miss, not a credit
+    assert rrow(c, pid, P.a, 0)["state"] == "MISSED"
+    # nobody has a credited round, so everything is shared equally; the unjudged claim earned no credit
+    assert [m["credited"] for m in prow(c, pid)["members"]] == [0, 0, 0]
+    assert paid(ledger, (P.a, P.b, P.c)) == [STAKE] * 3
+
+
+def test_an_unattended_claim_cannot_settle_as_met_or_receive_the_credited_slice(direct_vm, direct_deploy, ledger):
+    """a files a claim that nobody ever sends to the judge; b files one and gets a completed judgement (MET).
+    When the review time is over a's round is a final miss and a receives nothing: b alone takes the credited slice
+    and the pot. Every view and the settlement agree."""
+    c, pid = start(direct_deploy, direct_vm)
+    claim(c, direct_vm, P.a, pid, 0, offset=open_of(c, pid, 0) + 1)
+    claim(c, direct_vm, P.b, pid, 0, offset=open_of(c, pid, 0) + 2)
+    judge(c, direct_vm, P.stranger, pid, P.b, 0, "MET", 10, offset=close_of(c, pid, 0) + 1)  # only b is judged
+    rb = rrow(c, pid, P.b, 0)
+    assert rb["state"] == "PASSED" and rb["credited"] and rb["decided_by"] == BY_AI
+    by = rrow(c, pid, P.a, 0)["judge_by"] - T0
+
+    def mine(who):
+        return next(m for m in standing(c, pid)["members"] if m["who"] == hx(who))
+
+    # while the review time runs the claim only waits: no credit, no projected payout
+    at(direct_vm, by - 1)
+    ra = rrow(c, pid, P.a, 0)
+    assert ra["state"] == "CLAIMED" and not ra["credited"] and not ra["final"]
+    assert (mine(P.a)["credited"], mine(P.a)["pending"], mine(P.a)["projected"]) == (0, 1, "0")
+
+    # once it is over the claim is a final miss, in the round view, the marks and the standing
+    at(direct_vm, by)
+    ra = rrow(c, pid, P.a, 0)
+    assert ra["state"] == "MISSED" and not ra["credited"] and ra["final"] and ra["decided_by"] == BY_NONE
+    assert member(c, pid, P.a)["marks"] == "M__"
+    assert (mine(P.a)["credited"], mine(P.a)["pending"], mine(P.a)["projected"]) == (0, 0, "0")
+    assert (mine(P.b)["credited"], mine(P.b)["projected"]) == (1, str(18 * MILLI))
+    assert standing(c, pid)["all_final"]
+
+    settle(c, direct_vm, pid)
+    row = prow(c, pid)
+    assert row["state"] == SETTLED
+    assert [m["credited"] for m in row["members"]] == [0, 1, 0]
+    assert member(c, pid, P.a)["payout"] == "0" and member(c, pid, P.a)["credited"] == 0
+    # b: the credited slice (2) + the whole pot (18 - 2 = 16); a and c: nothing
+    assert paid(ledger, (P.a, P.b, P.c)) == [0, 18 * MILLI, 0] == model(STAKE, ROUNDS, [0, 1, 0])
+    assert all(who != hx(P.a) for who, _ in ledger.sent)  # not even a zero transfer
+    assert books(c)["balanced"] and ledger.total() == 3 * STAKE
 
 
 def test_settle_waits_for_a_dispute_time(direct_vm, direct_deploy):

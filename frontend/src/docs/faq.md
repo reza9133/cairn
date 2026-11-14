@@ -20,7 +20,7 @@ No. The organizer sets terms before the start, but money only leaves a pool thro
 
 ## What happens if nobody judges my claim?
 
-After the pool's *review time* (three days by default) an unjudged claim counts as credited. Rivals can ask for judgement earlier and contest, so a false claim is not free.
+After the pool's *review time* (three days by default) an unjudged claim is a final miss: it is never credited by default, and it earns no slice of the stake. Anyone can ask the judge, so ask for the judgement of your own claim once the round has closed. Rivals can contest a credit that is wrong, so a false claim is not free.
 
 ## Can I leave after the pool started?
 

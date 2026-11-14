@@ -48,7 +48,8 @@ Bob gets 0.003 + 0.009 x 1/3 = 0.006, Carol gets nothing.
 * **Everything the AI says can be contested** by someone with money on the line, and the second look is stricter: it credits only up
   to two thirds of the pool's doubt limit, and it reads the contester's reason as a lead, never as a fact.
 * **Humans are never locked out and never locked in.** The optional referee can overrule any claim that is not final. Nobody has to
-  be present for the pool to finish: an unjudged claim is credited once its review time is over, a contest nobody audits lapses and
+  be present for the pool to finish: a claim nobody judged lapses as a final miss once its review time is over (it is never credited
+  without a completed judgement), a contest nobody audits lapses and
   returns its bond, an unreadable page is retried and then counts against the claimant, and a pool that did not get enough members
   can be called off by anyone.
 * **Validators lean the same way.** A validator accepts the leader's judgement only if it is exactly as strict as its own, or one
@@ -72,7 +73,7 @@ For round `r` (starting at 0), with the pool starting at `start`, a round length
 | `start + r*len` | the round opens: claims for it are accepted |
 | `start + (r+1)*len` | the round closes: the judge can be asked about its claims |
 | `start + (r+1)*len + grace` | the last moment to claim (a round without a claim is a final miss) |
-| `max(close, claim time) + review_span` | `judge_by`: a claim nobody judged counts as credited from here on |
+| `max(close, claim time) + review_span` | `judge_by`: a claim nobody judged is a final miss from here on (it never counts without a completed judgement) |
 | judgement time + `dispute_span` | the judgement becomes final, unless it was contested |
 | contest time + 1 day | a contest nobody audited lapses; the bond goes back and the judgement stands |
 
@@ -181,8 +182,9 @@ In `get_pool`, every member has `marks`, one character per round:
   heavy scripts).
 * **Doubt is the model's own estimate.** The contract does not pretend it is a probability; it only uses it as a threshold the
   organizer can tighten.
-* **A claim nobody judges is credited after its review time.** That is deliberate (a pool must not hang), and it is the reason
-  rivals have a reward for running the judge and contesting.
+* **A claim nobody judges is a final miss after its review time.** The timeout never credits anything: a round counts only when a
+  completed judgement, audit or referee ruling says so. A pool still cannot hang, because the timeout resolves the claim, and the
+  claimant is the one who has to make sure the judge runs (anyone may ask it, so the claimant simply does) before `judge_by`.
 * **This is testnet software.** There is no governance, no upgrade path, and no audit beyond the tests in this repository.
 
 ---
@@ -205,7 +207,7 @@ genvm-lint check contracts/cairn.py
 python3 -m pytest -q
 ```
 
-In the last full run all 350 tests passed: 331 unit, adversarial and consensus tests, 3 rehearsal runs, and 16 random-game tests.
+In the last full run all 354 tests passed: 335 unit, adversarial and consensus tests, 3 rehearsal runs, and 16 random-game tests.
 Without the random games the suite takes under a minute; the random games take about three minutes on a single slow CPU.
 
 The suite runs the contract in the GenVM direct runner with the web and the model mocked. It covers input checks, the whole
@@ -222,18 +224,27 @@ The direct runner needs a GenVM runtime. On a machine where it cannot download o
 (`rehearsal/`). Every call of the live script is answered by the real contract code, with the web and the model mocked in three
 different ways so that every branch of the arena is walked (a dismissed contest, an upheld contest with the reward, a member
 winning a contest of their own round). It proves that the live script takes the right steps in the right order and that its checks
-agree with the contract. It cannot prove how the real model behaves.
+agree with the contract. It cannot prove how the real model behaves. It also walks the review timeout (the `unattended` scenario
+below) and checks that a claim nobody judged ends as a miss with a zero payout.
 
 ### The live run on Studionet
 
-`scripts/e2e.mjs` deploys `contracts/cairn.py` (unless `CAIRN_ADDRESS` is set) and runs three scenarios with real transactions and the
-real AI. Expect about 40 minutes of chain time in total.
+`scripts/e2e.mjs` deploys `contracts/cairn.py` (unless `CAIRN_ADDRESS` is set) and runs four scenarios with real transactions and the
+real AI. Expect about 60 minutes of chain time in total (`--only` runs a subset).
 
 | scenario | time | what it does |
 | --- | --- | --- |
 | `basics` | about 4 min | refused pool creations, terms, joining, leaving, a duplicate member, calling a pool off before it starts |
 | `nostart` | about 4 min | a pool that gets too few members is called off by a stranger after its start time |
+| `unattended` | about 20 min | a claim nobody sends to the judge is a final miss after its review time, nothing brings it back, and at the settlement it receives no credited slice (below) |
 | `arena` | about 30 min | three members and a referee play a full pool (below) |
+
+The unattended claim: a two-member pool with the shortest times the contract allows (review time 10 minutes). Alice and Bob each file
+a claim in round 1; only Bob's is sent to the real judge. While the review time runs Alice's claim is `CLAIMED`, provisional, with no
+credit. When it is over the claim is a final `MISSED` with no decision on record, the judge, a contest and an audit are all refused,
+and at the settlement Alice is credited no round. The check that Alice is paid exactly nothing (Bob takes the credited slice and the
+whole pot) runs whenever the real judge credited Bob; if it did not, nobody holds a credit, the pool is shared equally, and the run
+notes that instead. The payouts are checked against the independent model in both cases.
 
 The arena: two rounds on the subject of the Moon. Alice's evidence page is the Moon article, Bob's is the Mars article, and
 Carol's is the Earth article. Round 1: all three claim; Carol's claim tries to steer the judge. The real judge is asked about each;

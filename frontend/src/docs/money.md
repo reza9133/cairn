@@ -42,4 +42,4 @@ The **Ledger** page reads `solvency()`: everything ever paid in is either paid o
 - **Contesting someone else's credit** — you risk the bond to catch a wrong credit. If the second look agrees, you get the bond back **plus a reward of 25% of a slice**, and the round stops counting for the other member.
 - **Losing** — the bond joins the pot and is shared by the members who kept their promise.
 
-This is why rivals have a reason to run the judge: an unjudged claim is credited after the review time, so a member who suspects a false claim should ask for judgement and contest while it is possible.
+A round only counts after a completed judgement, audit or referee ruling: an unjudged claim is a final miss once the review time is over and earns no slice. So a member should ask for the judgement of their own claim in time, and a member who suspects a false credit can contest it while the dispute time runs.

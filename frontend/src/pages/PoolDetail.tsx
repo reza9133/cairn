@@ -104,7 +104,7 @@ function RoundInspector({ pool, who, round, now, onAction, onClose }: { pool: Po
             <Fact label="Opens" value={fmtDate(r.opens)} />
             <Fact label="Closes" value={fmtDate(r.closes)} />
             <Fact label="Claim until" value={fmtDate(r.claim_until)} />
-            {r.claimed && r.judge_by ? <Fact label="Judge by" value={fmtDate(r.judge_by)} hint="A claim nobody judged counts as credited after this" /> : null}
+            {r.claimed && r.judge_by ? <Fact label="Judge by" value={fmtDate(r.judge_by)} hint="A claim nobody judged counts as missed after this" /> : null}
             {r.dispute_until ? <Fact label="Dispute until" value={fmtDate(r.dispute_until)} /> : null}
           </dl>
 
@@ -114,6 +114,7 @@ function RoundInspector({ pool, who, round, now, onAction, onClose }: { pool: Po
             <p className="muted">{now < r.opens ? "This round has not opened yet." : now < r.claim_until ? "No claim yet — the round can still be claimed." : "No claim was filed: a final miss. The model was never asked."}</p>
           )}
 
+          {r.claimed && r.state === "MISSED" && r.final && !r.decided_by && !r.review && <Notice tone="warn" title="Not judged in time">Nobody asked the judge before the review time ended, so this claim is a final miss and earns no credit.</Notice>}
           {r.review && <JudgementCard title="AI judge" j={r.review} limit={pool.doubt_limit} />}
           {(r.tries ?? 0) > 0 && !r.review && <Notice tone="warn">The evidence page could not be read yet ({r.tries} {r.tries === 1 ? "try" : "tries"}). Retries happen every two minutes, up to three times.</Notice>}
 
@@ -299,7 +300,7 @@ export default function PoolDetail() {
               <Fact label="Rounds" value={`${p.rounds} × ${fmtDuration(p.round_len)}`} />
               <Fact label="Members" value={`${p.min_entrants}–${p.max_entrants}`} />
               <Fact label="Grace" value={fmtDuration(p.grace)} hint="Extra time to file a claim after a round closed" />
-              <Fact label="Review time" value={fmtDuration(p.review_span)} hint="After this, an unjudged claim counts" />
+              <Fact label="Review time" value={fmtDuration(p.review_span)} hint="After this, an unjudged claim is a final miss" />
               <Fact label="Dispute time" value={fmtDuration(p.dispute_span)} hint="How long a judgement can be contested" />
               <Fact label="Doubt limit" value={`${p.doubt_limit} / 100`} hint="MET counts only up to this doubt" />
               <Fact label="Contest bond" value={fmtGen(p.bond_due, 6)} />

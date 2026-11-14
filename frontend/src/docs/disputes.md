@@ -35,10 +35,10 @@ A pool may name a **referee** when it is created. The referee can **overrule** a
 
 | situation | what the contract does |
 | --- | --- |
-| nobody asks the judge | after the **review time**, the claim counts as credited |
+| nobody asks the judge | after the **review time**, the claim is a **final miss**; it is never credited by default |
 | a contest nobody audits | it **lapses** after a day and the bond returns |
 | the evidence page cannot be read | retried, then the round is missed (`unverifiable`) |
 | too few members at the start | **anyone** can call the pool off; stakes go back |
 | a pool is fully final | **anyone** settles it |
 
-A claim that nobody judges is credited on purpose — a pool must not hang — and it is the reason rivals are paid for running the judge and contesting.
+A claim that nobody judges resolves as a miss — a pool must not hang, and the timeout must never pay anyone. Anyone may ask the judge, so after you file a claim, ask for the judgement yourself before the review time ends. Rivals are paid for contesting a credit that turns out to be wrong.

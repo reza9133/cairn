@@ -111,7 +111,7 @@ export function roundActions(p: Pool, r: Round, role: Role, now: number) {
     : !r.claimed ? no("There is no claim to judge.")
     : r.state !== "CLAIMED" ? no("This claim has already been judged.")
     : now < r.closes ? no("The round is still running. The judge looks at it after it closes.")
-    : r.judge_by && now >= r.judge_by ? no("The review time is over; a claim nobody judged counts as credited.")
+    : r.judge_by && now >= r.judge_by ? no("The review time is over; a claim nobody judged counts as missed.")
     : (r.tries ?? 0) > 0 && now < (r.last_try ?? 0) + 120 ? no("Wait two minutes before asking again.")
     : yes;
 

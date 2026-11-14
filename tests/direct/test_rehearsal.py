@@ -5,6 +5,9 @@ the real contract code in the direct runner, with the web and the model mocked. 
 the contract through the right steps in the right order, that its checks agree with the contract, and that it finishes.
 It cannot prove how the real model or the real validators behave: that is what the live run is for.
 
+The script also walks the review timeout: in the `unattended` scenario one member's claim is never sent to the judge, and
+the rehearsal checks that it ends as a miss with no credited slice and a zero payout while the judged rival is credited.
+
 Three modes change what the mocked judge and auditor say, so that every branch of the arena is walked at least once:
   dismiss  the rival's contest of a credited round is dismissed (the auditor confirms the round)
   uphold   the rival's contest is upheld (the auditor refuses the round) and the rival earns the reward
@@ -216,9 +219,21 @@ def test_the_live_script_runs_to_the_end_against_the_contract(direct_vm, direct_
     bad_steps = [(sc["name"], st["label"], st["status"]) for sc in rep["scenarios"] for st in sc["steps"] if not st["ok"] and not st["expectedFail"]]
     statuses = {sc["name"]: sc["status"] for sc in rep["scenarios"]}
     assert not failed and not bad_steps, f"failed checks: {failed}\nfailed steps: {bad_steps}\nstatuses: {statuses}\n" + text[-2500:]
-    assert statuses == {"basics": "passed", "nostart": "passed", "arena": "passed", "totals": "passed"}, statuses
+    assert statuses == {"basics": "passed", "nostart": "passed", "unattended": "passed", "arena": "passed", "totals": "passed"}, statuses
     assert proc.returncode == 0, text[-2000:]
-    assert books(c)["balanced"] and stats(c)["settled"] == 1 and stats(c)["cancelled"] == 2
+    assert books(c)["balanced"] and stats(c)["settled"] == 2 and stats(c)["cancelled"] == 2
+    # the review timeout: the unjudged claim lapsed as a miss, and the unattended member was paid nothing (the mocked
+    # judge credits the rival in every mode, so the zero-payout check must have run, not been replaced by a note)
+    unattended = next(sc for sc in rep["scenarios"] if sc["name"] == "unattended")
+    ran = {ch["name"]: ch["ok"] for ch in unattended["checks"]}
+    for name in (
+        "after the review time alice's unjudged claim is a final MISS",
+        "it received no credit and no decision was ever made on it",
+        "alice has no credited round at all",
+        "alice receives nothing: bob alone takes the credited slice and the whole pot",
+        "every member was paid what the independent model says",
+    ):
+        assert ran.get(name) is True, (name, ran)
     # which branch of the arena was walked
     audits = [v for v in rep["verdicts"] if v["stage"].startswith("audit")]
     stages = " | ".join(f'{v["stage"]}={v["verdict"]}' for v in rep["verdicts"])
